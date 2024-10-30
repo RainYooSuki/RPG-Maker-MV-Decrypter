@@ -28,7 +28,8 @@ fieldset {
 }
 
 /* Spaces, sizes etc */
-body {
+body > div,
+div#language-selection-list-container {
 	padding: 0 40px;
 }
 
@@ -306,13 +307,22 @@ button#encrypt > span {
 	border-color: #B713FF !important;
 }
 
-.tooltip.help {
+.tooltip.help,
+.fileListTooltip.tooltip {
 	opacity: 1;
 	z-index: auto;
 	position: relative;
 	display: inline-block; /* Ensure inline-block */
 	border-bottom: 1px dotted #555;
 	cursor: help;
+}
+
+.errorTooltip.fileListTooltip.tooltip {
+	display: block !important; /* Ensure inline-block */
+}
+
+s.encryptedFile.tooltip {
+	text-decoration: line-through;
 }
 
 .tooltip .tooltipText {
@@ -360,6 +370,9 @@ button#encrypt > span {
 	background-color: transparent;
 	text-align: center;
 	width: 100%;
+
+	/* Fix for Chromium */
+	text-align-last: center;
 }
 
 .drag-drop-file:before {
@@ -370,6 +383,73 @@ button#encrypt > span {
 	left: 50%;
 	transform: translate(-50%);
 	z-index: -1000;
+}
+
+/* Head & Language Bar */
+.head-bar {
+	text-align: right;
+	display: none;
+	position: relative;
+}
+
+.head-bar,
+#language-selection-list-container > div {
+	background-color: #555;
+	color: #FFF;
+}
+
+.head-bar a {
+	color: #FFF;
+}
+
+.head-bar a:hover {
+	color: #AAF;
+	text-decoration: none;
+}
+
+.head-bar a:focus {
+	color: #E00;
+	text-decoration: none;
+}
+
+span#select-language-icon {
+	font-size: 10px;
+}
+
+#language-selection-list-container {
+	position: absolute;
+	right:0;
+	left: 0;
+	text-align: right;
+	z-index: 9999;
+	display: none;
+}
+
+#language-selection-list-container > div {
+	display: inline-block;
+	padding: 0 10px 5px 3px;
+	border-top: 1px solid #AAA;
+}
+
+#language-selection-list-container > div > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#language-selection-list-container ul > li {
+	text-align: left;
+}
+
+.flag-icon {
+	max-height: 16px;
+	margin: 0 2px 0 7px;
+}
+
+/* Translator bar */
+.translator {
+	margin-top: .80em;
+	display: none;
 }
 
 /* Media-Queries */

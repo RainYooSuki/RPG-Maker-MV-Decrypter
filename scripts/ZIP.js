@@ -60,5 +60,5 @@ ZIP.prototype.save = function() {
 			blob = null;
 		});
 	} else
-		alert('Can\'t offer ZIP-Download. ZIP would be empty...');
+		alert(lang.strings['error.zip.emptyZip']);
 };

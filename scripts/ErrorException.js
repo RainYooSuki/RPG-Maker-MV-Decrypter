@@ -26,6 +26,6 @@ function ErrorException(message, code) {
 	 * @returns {string} - Exception as String
 	 */
 	this.toString = function() {
-		return this.name + ': (Error-Code ' + this.code + ') ' + this.message;
+		return this.name + ': (' + html(lang.strings['exception.errorCode']) + ' ' + this.code + ') ' + this.message;
 	}
 }

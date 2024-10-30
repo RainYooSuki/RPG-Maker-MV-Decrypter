@@ -103,34 +103,53 @@ RPGFile.prototype.createOutPut = function(faultMessage) {
 		var saveFunction = document.createElement('a');
 
 		// Set all to view the link
-		viewLink.innerHTML = 'View';
 		if(! this.isEncryptedExt()) {
-			viewLink.title = 'View ' + this.name + '.' + this.extension + ' in your Browser';
+			viewLink.innerHTML = html(lang.strings['button.view']);
+			viewLink.title = html(lang.strings['title.viewInBrowser']);
 			viewLink.href = this.fileUrl;
 			viewLink.target = '_blank';
-		} else {
+			viewLink.className = lang.translateClass;
+			viewLink.setAttribute(lang.translateableText, 'button.view');
+			viewLink.setAttribute(lang.translateableTitle, 'title.viewInBrowser');
+		} else { // span
+			var viewText = document.createElement('span');
+			viewText.innerHTML = html(lang.strings['button.view']);
+			viewText.className = 'trl';
+			viewText.setAttribute(lang.translateableText, 'button.view');
+
 			var toolTipText = document.createElement('div');
-			toolTipText.className = 'tooltipText';
-			toolTipText.innerHTML = 'This File is encrypted and you can\'t view it in the Browser. ' +
-				'You can save it and put it in the game (Translated images for example).';
-			viewLink.className = 'grey encryptedFile tooltip';
+			toolTipText.className = 'tooltipText ' + lang.translateClass;
+			toolTipText.innerHTML = html(lang.strings['tooltip.content.viewEncryptedFileInfo']);
+			toolTipText.setAttribute(lang.translateableText, 'tooltip.content.viewEncryptedFileInfo');
+
+			viewLink.className = 'grey encryptedFile fileListTooltip tooltip';
+			viewLink.appendChild(viewText);
 			viewLink.appendChild(toolTipText);
 		}
 
 		// Set all to save file
-		saveFunction.innerHTML = 'Save';
-		saveFunction.className = 'save';
-		saveFunction.title = 'Save ' + this.name + '.' + this.extension + ' on your Computer';
+		saveFunction.innerHTML = html(lang.strings['button.save']);
+		saveFunction.className = 'save ' + lang.translateClass;
+		saveFunction.title = html(lang.strings['title.save']);
 		saveFunction.href = this.fileUrl;
 		saveFunction.download = this.name + '.' + this.extension;
 		saveFunction.target = '_blank';
+		saveFunction.setAttribute(lang.translateableText, 'button.save');
+		saveFunction.setAttribute(lang.translateableTitle, 'title.save');
 	} else {
+		var errorTxt = document.createElement('span');
+		errorTxt.innerHTML = html(lang.strings['error']);
+		errorTxt.className = lang.translateClass;
+		errorTxt.setAttribute(lang.translateableText, 'error');
+
 		var errorEl = document.createElement('span');
+		errorEl.className = 'tooltip errorTooltip fileListTooltip';
+
 		var tooltipError = document.createElement('span');
-		errorEl.innerHTML = 'Error';
-		errorEl.className = 'tooltip';
 		tooltipError.innerHTML = faultMessage;
-		tooltipError.className = 'tooltipText longText';
+		tooltipError.className = 'tooltipText longText ' + lang.translateClass;
+
+		errorEl.appendChild(errorTxt);
 		errorEl.appendChild(tooltipError);
 
 		// Add Error-CSS-Class

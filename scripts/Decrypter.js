@@ -130,7 +130,7 @@ function Decrypter(encryptionKey) {
 	 */
 	Decrypter.prototype.restorePngHeader = function(arrayBuffer) {
 		if(! arrayBuffer)
-			throw new ErrorException('File is empty or can\'t be read by your Browser...', 1);
+			throw new ErrorException(html(lang.strings['exception.emptyFile']), 1);
 
 		var headerLen = (this.pngHeaderLen === null) ? this.getHeaderLen() : this.pngHeaderLen;
 		var pngStartHeader = Decrypter.getNormalPNGHeader(headerLen);
@@ -157,14 +157,14 @@ function Decrypter(encryptionKey) {
 	 */
 	Decrypter.prototype.decrypt = function(arrayBuffer) {
 		if(! arrayBuffer)
-			throw new ErrorException('File is empty or can\'t be read by your Browser...', 1);
+			throw new ErrorException(html(lang.strings['exception.emptyFile']), 1);
 
 		if(! this.ignoreFakeHeader) {
 			var header = new Uint8Array(arrayBuffer, 0, this.getHeaderLen());
 			if(! this.verifyFakeHeader(header))
 				throw new ErrorException(
-					'Fake-Header don\'t matches the Template-Fake-Header. Make sure, that you use an Encrypted File.' +
-					' - If you do, turn off "Fake-Header"-Check and try again.',
+					html(lang.strings['exception.invalidFakeHeader.1']) + ' ' +
+					html(lang.strings['exception.invalidFakeHeader.2']),
 					2
 				);
 		}
@@ -186,7 +186,7 @@ function Decrypter(encryptionKey) {
 	 */
 	Decrypter.prototype.encrypt = function(arrayBuffer) {
 		if(! arrayBuffer)
-			throw new ErrorException('File is empty or can\'t be read by your Browser...', 1);
+			throw new ErrorException(html(lang.strings['exception.emptyFile']), 1);
 
 		// Encrypt the File beginning
 		arrayBuffer = this.xOrBytes(arrayBuffer);
@@ -203,7 +203,7 @@ function Decrypter(encryptionKey) {
 		var header = new Uint8Array(tmpInt8Array.buffer, 0, this.getHeaderLen());
 		if(! this.verifyFakeHeader(header))
 			throw new ErrorException(
-				'Fake-Header don\'t matches the Template-Fake-Header... Please report this Bug',
+				html(lang.strings['exception.invalidFakeHeader.1']) + ' ' + html(lang.strings['exception.reportBug']),
 				3
 			);
 
@@ -501,7 +501,7 @@ Decrypter.helperShowBits = function(byte) {
 	if(isNaN(byte))
 		byte = 0;
 	if(byte > 255 || byte < 0)
-		throw 'Invalid Byte-Value (' + byte + ')';
+		throw html(lang.strings['exception.helper.invalidByte']).replace('{0}', byte.toString());
 
 	var bits = byte.toString(2);
 	var missingZeros = 8 - bits.length;

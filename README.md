@@ -1,11 +1,3 @@
-# IMPORTANT: Project MOVED to [Gitlab.com](https://gitlab.com/Petschko/RPG-Maker-MV-Decrypter) 
-
-Please look there for updates/Bug-Reports - This Github Repo will be Read-Only by now
-
-https://gitlab.com/Petschko/RPG-Maker-MV-Decrypter
-
-----
-
 # Petschko's RPG-Maker-MV & MZ File-Decrypter
 
 ## What's that?
@@ -125,7 +117,7 @@ Here you go:
 
 ## Credits
 
-- [Petschko](https://github.com/Petschko) _(Me xD)_ - For creating this Project
+- [Petschko](https://gitlab.com/Petschko) _(Me xD)_ - For creating this Project
 - [Stuk](https://github.com/Stuk) - For the ZIP-Library ([jszip @ Github](https://github.com/Stuk/jszip))
 - [pieroxy](https://github.com/pieroxy) - For the LZ-String-Library ([lz-string @ Github](https://github.com/pieroxy/lz-string))
 - [eligrey](https://github.com/eligrey) - For the FileSaver.js-Library ([FileSaver.js @ Github](https://github.com/eligrey/FileSaver.js))

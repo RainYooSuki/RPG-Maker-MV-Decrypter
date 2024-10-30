@@ -21,13 +21,15 @@ function getCode(systemFileElId, codeTextElId, headerLenId) {
 	var headerLen = document.getElementById(headerLenId);
 
 	if(systemFileEl.files.length < 1) {
-		alert('Please choose the System.json-File!');
+		alert(lang.strings['error.detect.noFile']
+			.replace('{0}', 'System(.json)')
+			.replace('{1}', '.rpgmvp / .png_'));
 		return;
 	}
 
 	Decrypter.detectEncryptionCode(new RPGFile(systemFileEl.files[0], null), parseInt(headerLen.value), function(key) {
 		if(key === null) {
-			alert('Error: File-Content was invalid (Was not a JSON-File or an Encrypted Image - .json/.rpgmvp/.png_)');
+			alert(lang.strings['error.detect.invalidJsonFile'].replace('{0}', '.json/.rpgmvp/.png_'));
 			return;
 		}
 
@@ -35,17 +37,17 @@ function getCode(systemFileElId, codeTextElId, headerLenId) {
 			codeTextEl.value = key;
 			codeTextEl.className = removeValidationCssClasses(codeTextEl.className);
 			codeTextEl.className = addCssClass(codeTextEl.className, 'valid');
-			alert('Key found^^! (' + key + ')');
+			alert(lang.strings['info.detect.keyFound'].replace('{0}', key));
 		} else
 			window.prompt(
-				'Error: Encryption-Key not found - Make sure that you select the correct file!\n\n' +
-				'You can also use Encrypted-Images (.rpgmvp / .png_) to detect the Key!\n' +
+				lang.strings['error.detect.keyNotFound.1'] + '\n\n' +
+				lang.strings['error.detect.keyNotFound.2'].replace('{0}', '.rpgmvp / .png_') + '\n' +
 				'-------------------------------------\n' +
-				'In rare cases the Key is hidden/obfuscated in the game. Try these steps:\n' +
-				'1. Open the Link below and copy the code\n' +
-				'2. Paste the Code at the last line in this File: ./www/js/rpg_core(.js)\n' +
-				'3. Save the file\n' +
-				'4. Run the game and copy the Code\n\n',
+				lang.strings['error.detect.keyNotFound.3'] + '\n' +
+				'1. ' + lang.strings['error.detect.keyNotFound.3.1'] + '\n' +
+				'2. ' + lang.strings['error.detect.keyNotFound.3.2'].replace('{0}', './www/js/rpg_core(.js)') + '\n' +
+				'3. ' + lang.strings['error.detect.keyNotFound.3.3'] + '\n' +
+				'4. ' + lang.strings['error.detect.keyNotFound.3.4'] + '\n\n',
 				'https://pastebin.com/nCrzCpzD'
 			);
 	});
@@ -160,13 +162,18 @@ function manualChange(elementId) {
 function spoiler(spoilerTextElId, spoilerText, spoilerElId) {
 	var spoilerTextEl = document.getElementById(spoilerTextElId);
 	var spoilerEl = document.getElementById(spoilerElId);
+	var showHideSpan = spoilerTextEl.getElementsByTagName('span')[0];
 
 	if(hasCssClass(spoilerEl.className, 'hidden')) {
 		spoilerEl.className = removeCssClass(spoilerEl.className, 'hidden');
-		spoilerTextEl.innerHTML = spoilerText + ' (Hide)';
+
+		showHideSpan.setAttribute(lang.translateableText, 'enDecrypt.button.headerValues.show.hide');
+		showHideSpan.innerHTML = html(lang.strings['enDecrypt.button.headerValues.show.hide']);
 	} else {
 		spoilerEl.className = addCssClass(spoilerEl.className, 'hidden');
-		spoilerTextEl.innerHTML = spoilerText + ' (Show)';
+
+		showHideSpan.setAttribute(lang.translateableText, 'enDecrypt.button.headerValues.show.show');
+		showHideSpan.innerHTML = html(lang.strings['enDecrypt.button.headerValues.show.show']);
 	}
 }
 
@@ -189,6 +196,9 @@ function init() {
 	var headerResetButton = document.getElementById('resetHeader');
 	var zipSaveButtons = document.getElementsByClassName('zipSave');
 	var clearFileListButtons = document.getElementsByClassName('clearFileList');
+
+	// Language Init
+	lang = new Language(languageList);
 
 	// Prepare stuff
 	if(! parseInt(getRadioButtonValue('checkFakeHeader', '1')))
@@ -287,7 +297,7 @@ document.body[window.addEventListener ? 'addEventListener' : 'attachEvent'](
  */
 function setHeaderDefaultValues(confirmDialog) {
 	if(confirmDialog) {
-		if(! confirm('Are you sure to reset the Header-Values to default?'))
+		if(! confirm(lang.strings['confirm.resetHeaderValues']))
 			return;
 	}
 
@@ -323,7 +333,7 @@ function processRestoreFiles(fileUrlElId, outputElClass) {
 
 	// Check if at least 1 File is given
 	if(fileUrlEl.files.length < 1) {
-		alert('Specify at least 1 File to restore...');
+		alert(lang.strings['error.restore.noFileSelected']);
 
 		return;
 	}
@@ -413,7 +423,7 @@ function processFiles(
 
 	// Check if all required stuff is given
 	if(! encryptionCode) {
-		alert('Specify the En/Decryption-Code!');
+		alert(lang.strings['error.enDecrypt.noCode']);
 		encryptCodeEl.className = removeValidationCssClasses(encryptCodeEl.className);
 		encryptCodeEl.className = addCssClass(encryptCodeEl.className, 'invalid');
 
@@ -422,7 +432,7 @@ function processFiles(
 
 	// Check if code just contain HEX-Chars
 	if(! Decrypter.checkHexChars(encryptionCode)) {
-		alert('En/Decryption-Code can just contain HEX-Chars (0-9 & A-F or a-f)!');
+		alert(lang.strings['error.enDecrypt.invalidCode'].replace('{0}', '0-9 & A-F & a-f'));
 		encryptCodeEl.className = removeValidationCssClasses(encryptCodeEl.className);
 		encryptCodeEl.className = addCssClass(encryptCodeEl.className, 'invalid');
 
@@ -435,7 +445,7 @@ function processFiles(
 
 	// Check if at least 1 File is given
 	if(fileUrlEl.files.length < 1) {
-		alert('Specify at least 1 File to decrypt...');
+		alert(lang.strings['error.enDecrypt.noFileSelected']);
 
 		return;
 	}
@@ -449,8 +459,7 @@ function processFiles(
 			decrypter.headerLen = Math.floor(headerLen);
 		else if(headerLen) {
 			headerLenEl.className = addCssClass(headerLenEl.className, 'invalid');
-			alert('Info: Header-Length must be a positive round Number! (Using default now: ' +
-				decrypter.defaultHeaderLen + ')');
+			alert(lang.strings['warn.enDecrypt.header.invalidLength'].replace('{0}', decrypter.defaultHeaderLen));
 		}
 
 		signatureEl.className = removeValidationCssClasses(signatureEl.className);
@@ -458,8 +467,9 @@ function processFiles(
 			decrypter.signature = signature;
 		else if(signature) {
 			signatureEl.className = addCssClass(signatureEl.className, 'invalid');
-			alert('Info: Header-Signature can just contain HEX-Chars (0-9 & A-F or a-f)! (Using default now: ' +
-				decrypter.defaultSignature + ')');
+			alert(lang.strings['warn.enDecrypt.header.invalidSignature']
+				.replace('{0}', '0-9 & A-F & a-f')
+				.replace('{1}', decrypter.defaultSignature));
 		}
 
 		versionEl.className = removeValidationCssClasses(versionEl.className);
@@ -467,8 +477,9 @@ function processFiles(
 			decrypter.version = version;
 		else if(version) {
 			versionEl.className = addCssClass(versionEl.className, 'invalid');
-			alert('Info: Header-Version can just contain HEX-Chars (0-9 & A-F or a-f)! (Using default now: ' +
-				decrypter.defaultVersion + ')');
+			alert(lang.strings['warn.enDecrypt.header.invalidVersion']
+				.replace('{0}', '0-9 & A-F & a-f')
+				.replace('{1}', decrypter.defaultVersion));
 		}
 
 		remainEl.className = removeValidationCssClasses(remainEl.className);
@@ -476,8 +487,9 @@ function processFiles(
 			decrypter.remain = remain;
 		else if(remain) {
 			remainEl.className = addCssClass(remainEl.className, 'invalid');
-			alert('Info: Header-Remain can just contain HEX-Chars (0-9 & A-F or a-f)! (Using default now: ' +
-				decrypter.defaultRemain + ')');
+			alert(lang.strings['warn.enDecrypt.header.invalidRemain']
+				.replace('{0}', '0-9 & A-F & a-f')
+				.replace('{1}', decrypter.defaultRemain));
 		}
 	}
 
@@ -569,6 +581,36 @@ function enableFileButtons(clearFileListButtonClass, zipSaveButtonClass) {
 
 	for(i = 0; i < zipSaveButtonEls.length; i++)
 		zipSaveButtonEls[i].disabled = '';
+}
+
+/**
+ * Encodes text HTML-Special Characters
+ *
+ * @param {string} s - Unencoded String
+ * @returns {string} - Encoded String
+ */
+function html(s) {
+	var el = document.createElement("div");
+	el.innerText = el.textContent = s;
+	s = el.innerHTML;
+	return s.replaceAll(/"/g, '&quot;')
+		.replaceAll(/'/g, '&apos;')
+		.replaceAll('#', '&num;');
+}
+
+/**
+ * Escapes Titles/Alt-Tags
+ *
+ * @param {string} s - Enencoded String
+ * @returns {string} - Encoded String
+ */
+function escapeTitle(s) {
+	s = html(s);
+
+	return s.replaceAll('&quot;', '\'\'')
+		.replaceAll('&apos;', '\'')
+		.replaceAll('&num;', '#')
+		.replaceAll('&amp;', '&');
 }
 
 /**
